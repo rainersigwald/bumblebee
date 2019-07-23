@@ -12,6 +12,7 @@ namespace Bumblebee
 
         public Snippet(string text)
         {
+            // TODO: try parsing as statement first?
             Expression = SyntaxFactory.ParseExpression(text);
 
             if (!Expression.DescendantNodes().Any())
