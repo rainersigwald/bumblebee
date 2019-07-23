@@ -15,6 +15,8 @@ namespace Bumblebee
             // TODO: try parsing as statement first?
             Expression = SyntaxFactory.ParseExpression(text);
 
+            // TODO: make this error! just not sure . . . how.
+
             if (!Expression.DescendantNodes().Any())
             {
                 throw new UnknownExpressionException();
