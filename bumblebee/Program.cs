@@ -1,4 +1,5 @@
-﻿using Microsoft.Build.Locator;
+﻿using Bumblebee;
+using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis.MSBuild;
 using System;
 using System.Linq;
@@ -19,21 +20,26 @@ namespace bumblebee
         {
             MSBuildLocator.RegisterDefaults();
 
-            await RunAsync(solutionPath, from, to);
-        }
+            var fromSnippet = new Snippet(from);
+            var toSnippet = new Snippet(to);
 
-        private static async Task RunAsync(string? solutionPath, string from, string to)
-        {
             var workspace = MSBuildWorkspace.Create();
             var solution = await workspace.OpenSolutionAsync(solutionPath);
 
-            var p = solution.Projects.First();
+            foreach (var project in solution.Projects)
+            {
+                var compilation = await project.GetCompilationAsync();
 
-            var c = await p.GetCompilationAsync();
+                foreach (var syntaxTree in compilation.SyntaxTrees)
+                {
+                    var match = TreeMatcher.Match(syntaxTree.GetRoot(), fromSnippet);
 
-            //var s = c.SyntaxTrees.First();
-
-            //var r = await s.GetRootAsync();
+                    if (match is object)
+                    {
+                        Console.WriteLine(match);
+                    }
+                }
+            }
         }
     }
 }

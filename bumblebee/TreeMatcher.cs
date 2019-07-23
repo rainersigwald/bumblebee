@@ -21,7 +21,7 @@ namespace Bumblebee
         public static SyntaxNode? Match(SyntaxNode haystack, SyntaxNode needle)
         {
             SyntaxKind needleRootKind = needle.Kind();
-            //System.Console.WriteLine($"Trying to match a {needleRootKind}");
+            // Console.WriteLine($"Trying to match a {needleRootKind}");
 
             var needleChildren = needle.ChildNodes().ToArray();
 
