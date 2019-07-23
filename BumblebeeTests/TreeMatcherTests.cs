@@ -52,14 +52,15 @@ namespace HelloWorld
             match.Should().BeNull();
         }
 
-        [Fact]
-        public void NoWildcardsExpressionAlmostMatches()
+        [Theory]
+        [InlineData("Foo.Baz()")]
+        [InlineData("Baz.Bar()")]
+        public void NoWildcardsExpressionAlmostMatches(string searchString)
         {
             var tree = SyntaxFactory.ParseExpression("Foo.Bar()");
 
-            TreeMatcher.Match(tree, new Snippet("Foo.Baz()"))
+            TreeMatcher.Match(tree, new Snippet(searchString))
                 .Should().BeNull();
-
         }
     }
 }
