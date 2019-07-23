@@ -29,18 +29,6 @@ namespace bumblebee
             //var s = c.SyntaxTrees.First();
 
             //var r = await s.GetRootAsync();
-
-            //foreach (Microsoft.CodeAnalysis.SyntaxNode n in r.DescendantNodes())
-            //{
-            //    Console.WriteLine($"{n.GetType()}: {n}");
-            //}
-
-            foreach (var syntaxTree in c.SyntaxTrees)
-            {
-                var rewriter = new Rewriter();
-
-                var newSource = rewriter.Visit(syntaxTree.GetRoot());
-            }
         }
     }
 }
