@@ -10,9 +10,12 @@ namespace Bumblebee
     {
         public readonly ExpressionSyntax Expression;
 
-        public Snippet(string text)
+        public Snippet(string? text)
         {
+            // TODO: try parsing as statement first?
             Expression = SyntaxFactory.ParseExpression(text);
+
+            // TODO: make this error! just not sure . . . how.
 
             if (!Expression.DescendantNodes().Any())
             {

@@ -13,6 +13,7 @@ namespace BumblebeeTests
         [InlineData("a()")]
         [InlineData("(a)")]
         [InlineData("Method(a)")]
+        [InlineData("Qualified.Method(a)")]
         [InlineData("MethodWithALowercaseA(a)")]
         [InlineData(@"a = ""a""")]
         [InlineData(@"a + a + a")]
