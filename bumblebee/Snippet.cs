@@ -10,7 +10,7 @@ namespace Bumblebee
     {
         public readonly ExpressionSyntax Expression;
 
-        public Snippet(string text)
+        public Snippet(string? text)
         {
             // TODO: try parsing as statement first?
             Expression = SyntaxFactory.ParseExpression(text);
