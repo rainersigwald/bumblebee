@@ -1,6 +1,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -14,36 +15,57 @@ namespace Bumblebee
             return Match(tree, snippet.Expression);
         }
 
-        public static SyntaxNode? Match(SyntaxNode tree, SyntaxNode snippet)
+        public static SyntaxNode? Match(SyntaxNode haystack, SyntaxNode needle)
         {
-            SyntaxKind snippetKind = snippet.Kind();
-            System.Console.WriteLine($"Trying to match a {snippetKind}");
+            SyntaxKind needleRootKind = needle.Kind();
+            //System.Console.WriteLine($"Trying to match a {needleRootKind}");
 
-            var snippetChildren = snippet.ChildNodes().ToArray();
+            var needleChildren = needle.ChildNodes().ToArray();
 
-            foreach (var descendant in tree.DescendantNodesAndSelf())
+            // walk the full tree, 
+            foreach (var descendant in haystack.DescendantNodesAndSelf())
             {
-                if (descendant.IsKind(snippetKind))
+                // checking each node against the root of the needle
+                if (!descendant.IsKind(needleRootKind))
                 {
-                    // System.Console.WriteLine($"Match found: {descendant} is a {snippetKind}");
-
-                    var treeNodes = descendant.DescendantNodes().ToArray();
-
-                    for (int i = 0; i < snippetChildren.Length; i++)
-                    {
-                        SyntaxNode snippetNode = snippetChildren[i];
-                        System.Console.WriteLine($"Descendant: {snippetNode}, a {snippetNode.Kind()}");
-                        if (!LeafNodeMatches(treeNodes[i], snippetNode))
-                        {
-                            System.Console.WriteLine($"Leaf match failure");
-                            break;
-                        }
-                    }
-
-                    System.Console.WriteLine($"Calling it a match on {descendant} to {snippet}");
-
-                    return descendant;
+                    // This node doesn't match the root of the needle, so discard it.
+                    // Since we're walking all descendant nodes, we'll find any children/
+                    // grandchildren later.
+                    continue;
                 }
+
+                // If the kind of the current node matches the root of the needle,
+                // start checking its children
+
+                var haystackChildren = descendant.ChildNodes().ToArray();
+
+                // If there are different numbers of immediate children, fail
+                if (haystackChildren.Length != needleChildren.Length)
+                {
+                    continue;
+                }
+
+                bool allChildrenMatch = true;
+
+                for (int i = 0; i < needleChildren.Length; i++)
+                {
+                    //System.Console.WriteLine($"Descendant: {needleChildren[i]}, a {needleChildren[i].Kind()}");
+                    if (!RootedRecursiveMatchWithWildcards(haystackChildren[i], needleChildren[i]))
+                    {
+                        //System.Console.WriteLine($"Recursive match failure");
+                        allChildrenMatch = false;
+                        break;
+                    }
+                }
+
+                if (!allChildrenMatch)
+                {
+                    continue;
+                }
+
+                //System.Console.WriteLine($"Calling it a match on {descendant} to {needle}");
+
+                return descendant;
 
                 // System.Console.WriteLine($"Discarding {descendant}");
             }
@@ -51,27 +73,46 @@ namespace Bumblebee
             return null;
         }
 
-        private static bool LeafNodeMatches(SyntaxNode left, SyntaxNode right)
+        private static bool RootedRecursiveMatchWithWildcards(SyntaxNode haystack, SyntaxNode needle)
         {
-            if (!left.IsKind(right.Kind()))
+            // TODO: "with wildcards"! when the needle is an identifier it might be a wildcard match
+
+            if (!haystack.IsKind(needle.Kind()))
             {
                 return false;
+
             }
 
-            switch ((left, right))
+            var haystackChildren = haystack.ChildNodes().ToArray();
+            var needleChildren = needle.ChildNodes().ToArray();
+
+            if (needleChildren.Length == 0)
             {
-                case (IdentifierNameSyntax leftIdentifier, IdentifierNameSyntax rightIdentifier):
-                    System.Console.WriteLine($"Identifier {leftIdentifier} =? {rightIdentifier}");
-                    if (leftIdentifier.Identifier.IsEquivalentTo(rightIdentifier.Identifier))
-                    {
-                        System.Console.WriteLine("*** match");
-                        return true;
-                    }
+                // No children so this must be a primitive.
 
-                    break;
+                switch (haystack, needle)
+                {
+                    case (IdentifierNameSyntax haystackName, IdentifierNameSyntax needleName):
+                        return haystackName.Identifier.ValueText.Equals(needleName.Identifier.ValueText, StringComparison.Ordinal);
+                    case (LiteralExpressionSyntax haystackLiteral, LiteralExpressionSyntax needleLiteral):
+                        return true; // TODO: this is 100% bogus
+                    default:
+                        throw new NotImplementedException($"Don't understand primitive type comparison: {haystack} is {haystack.Kind()}, {needle} is {needle.Kind()}");
+                }
             }
 
-            return false;
+            // some children, so recursively match on each
+
+            for (int i = 0; i < needleChildren.Length; i++)
+            {
+                if (!RootedRecursiveMatchWithWildcards(haystackChildren[i], needleChildren[i]))
+                {
+                    // a child doesn't match, so fail out
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
