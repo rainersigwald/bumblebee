@@ -68,9 +68,19 @@ namespace HelloWorld
             match.Should().NotBeNull();
         }
 
+        [Fact]
+        public void WildcardWithDifferentArityDoesNotMatch()
+        {
+            var match = TreeMatcher.Match(tree.GetRoot(), new Snippet("Console.WriteLine(a, b)"));
+
+            match.Should().BeNull();
+        }
+
+
         [Theory]
         [InlineData("Foo.Baz()")]
         [InlineData("Baz.Bar()")]
+        [InlineData("Foo.Bar(a)")]
         public void NoWildcardsExpressionAlmostMatches(string searchString)
         {
             var tree = SyntaxFactory.ParseExpression("Foo.Bar()");

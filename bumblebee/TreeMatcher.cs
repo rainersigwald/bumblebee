@@ -109,8 +109,13 @@ namespace Bumblebee
                 }
             }
 
-            // some children, so recursively match on each
+            // some children--the same number?
+            if (haystackChildren.Length != needleChildren.Length)
+            {
+                return false;
+            }
 
+            // then recursively match on each
             for (int i = 0; i < needleChildren.Length; i++)
             {
                 if (!RootedRecursiveMatchWithWildcards(haystackChildren[i], needleChildren[i]))
