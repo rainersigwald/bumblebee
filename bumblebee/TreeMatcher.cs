@@ -116,7 +116,10 @@ namespace Bumblebee
                 switch (haystack, needle)
                 {
                     case (IdentifierNameSyntax haystackName, IdentifierNameSyntax needleName):
-                        return haystackName.Identifier.ValueText.Equals(needleName.Identifier.ValueText, StringComparison.Ordinal);
+                        // Literal match, or
+                        return haystackName.Identifier.ValueText.Equals(needleName.Identifier.ValueText, StringComparison.Ordinal) ||
+                            // wildcard-only needle
+                            IsWildcardExpression(needleName);
                     case (LiteralExpressionSyntax haystackLiteral, LiteralExpressionSyntax needleLiteral):
                         return haystackLiteral.Token.ValueText.Equals(needleLiteral.Token.ValueText, StringComparison.Ordinal);
                     case (ArgumentListSyntax haystackArguments, ArgumentListSyntax needleArguments):

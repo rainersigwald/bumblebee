@@ -90,11 +90,20 @@ namespace HelloWorld
         }
 
         [Fact]
-        public void MethodCallOnWildcard()
+        public void MemberMethodCallOnWildcard()
         {
             var tree = SyntaxFactory.ParseExpression("Foo.Bar.Baz()");
 
             TreeMatcher.Match(tree, new Snippet("a.Baz()"))
+                .Should().NotBeNull();
+        }
+
+        [Fact]
+        public void BareMethodCallOnWildcard()
+        {
+            var tree = SyntaxFactory.ParseExpression("Foo.Bar()");
+
+            TreeMatcher.Match(tree, new Snippet("a.Bar()"))
                 .Should().NotBeNull();
         }
 
