@@ -8,16 +8,30 @@ using System.Text.RegularExpressions;
 
 namespace Bumblebee
 {
+    /// <summary>
+    /// Methods containing tree pattern matching functionality over Roslyn <see cref="SyntaxNode"/>s.
+    /// </summary>
     public static class TreeMatcher
     {
         private static readonly Regex SingleLowercaseCharacter = new Regex(@"^\p{Ll}$", RegexOptions.Compiled);
         
-
-        public static SyntaxNode? Match(SyntaxNode tree, Snippet snippet)
+        /// <summary>
+        /// Find the first match of a given snippet in a tree.
+        /// </summary>
+        /// <param name="haystack">A <see cref="SyntaxNode"/> representing the code to be searched in.</param>
+        /// <param name="needle">A match pattern.</param>
+        /// <returns></returns>
+        public static SyntaxNode? Match(SyntaxNode haystack, Snippet needle)
         {
-            return Match(tree, snippet.Expression);
+            return Match(haystack, needle.Expression);
         }
 
+        /// <summary>
+        /// Find the first match of a given snippet in a tree.
+        /// </summary>
+        /// <param name="haystack">A <see cref="SyntaxNode"/> representing the code to be searched in.</param>
+        /// <param name="needle">A match pattern.</param>
+        /// <returns></returns>
         public static SyntaxNode? Match(SyntaxNode haystack, SyntaxNode needle)
         {
             SyntaxKind needleRootKind = needle.Kind();

@@ -6,10 +6,20 @@ using System.Text.RegularExpressions;
 
 namespace Bumblebee
 {
+    /// <summary>
+    /// Code blob, possibly containing wildcard matches.
+    /// </summary>
     public class Snippet
     {
+        /// <summary>
+        /// The <see cref="ExpressionSyntax" /> that includes the wildcards as identifiers.
+        /// </summary>
         public readonly ExpressionSyntax Expression;
 
+        /// <summary>
+        /// Construct a new <see cref="Snippet"/> from a string containing a C# expression.
+        /// </summary>
+        /// <param name="text">String containing a C# expression, possibly with wildcards (single-character variables).</param>
         public Snippet(string? text)
         {
             // TODO: try parsing as statement first?
@@ -34,6 +44,9 @@ namespace Bumblebee
                 .ToList();
         }
 
+        /// <summary>
+        /// List of indentifiers found in the expression that will be treated as wildcards.
+        /// </summary>
         public List<string> SubexpressionIdentifiers { get; private set; }
     }
 }
