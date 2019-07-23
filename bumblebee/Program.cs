@@ -23,7 +23,7 @@ namespace bumblebee
             var fromSnippet = new Snippet(from);
             var toSnippet = new Snippet(to);
 
-            var workspace = MSBuildWorkspace.Create();
+            using var workspace = MSBuildWorkspace.Create();
             var solution = await workspace.OpenSolutionAsync(solutionPath);
 
             foreach (var project in solution.Projects)
