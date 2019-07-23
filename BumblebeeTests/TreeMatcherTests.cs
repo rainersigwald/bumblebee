@@ -88,5 +88,15 @@ namespace HelloWorld
             TreeMatcher.Match(tree, new Snippet(searchString))
                 .Should().BeNull();
         }
+
+        [Fact]
+        public void MethodCallOnWildcard()
+        {
+            var tree = SyntaxFactory.ParseExpression("Foo.Bar.Baz()");
+
+            TreeMatcher.Match(tree, new Snippet("a.Baz()"))
+                .Should().NotBeNull();
+        }
+
     }
 }

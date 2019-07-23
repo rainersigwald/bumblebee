@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -118,8 +119,14 @@ namespace Bumblebee
                         return haystackName.Identifier.ValueText.Equals(needleName.Identifier.ValueText, StringComparison.Ordinal);
                     case (LiteralExpressionSyntax haystackLiteral, LiteralExpressionSyntax needleLiteral):
                         return haystackLiteral.Token.ValueText.Equals(needleLiteral.Token.ValueText, StringComparison.Ordinal);
+                    case (ArgumentListSyntax haystackArguments, ArgumentListSyntax needleArguments):
+                        // It looks like we only get handed childless ArgumentLists if they're empty.
+                        // If that's not the case, explode:
+                        Debug.Assert(haystackArguments.Arguments.Count == 0 &&
+                                     needleArguments.Arguments.Count == 0);
+                        return true;
                     default:
-                        throw new NotImplementedException($"Don't understand primitive type comparison: {haystack} is {haystack.Kind()}, {needle} is {needle.Kind()}");
+                        throw new NotImplementedException($"Don't understand primitive type comparison: {haystack} is {haystack.Kind()} ({haystack.GetType()}), {needle} is {needle.Kind()}");
                 }
             }
 
