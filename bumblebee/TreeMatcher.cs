@@ -95,7 +95,7 @@ namespace Bumblebee
                     case (IdentifierNameSyntax haystackName, IdentifierNameSyntax needleName):
                         return haystackName.Identifier.ValueText.Equals(needleName.Identifier.ValueText, StringComparison.Ordinal);
                     case (LiteralExpressionSyntax haystackLiteral, LiteralExpressionSyntax needleLiteral):
-                        return true; // TODO: this is 100% bogus
+                        return haystackLiteral.Token.ValueText.Equals(needleLiteral.Token.ValueText, StringComparison.Ordinal);
                     default:
                         throw new NotImplementedException($"Don't understand primitive type comparison: {haystack} is {haystack.Kind()}, {needle} is {needle.Kind()}");
                 }

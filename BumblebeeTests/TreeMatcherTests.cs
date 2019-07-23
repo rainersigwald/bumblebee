@@ -1,5 +1,6 @@
 using Bumblebee;
 using FluentAssertions;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
@@ -12,15 +13,7 @@ namespace BumblebeeTests
     {
         private readonly ITestOutputHelper output;
 
-        public TreeMatcherTests(ITestOutputHelper output)
-        {
-            this.output = output;
-        }
-
-        [Fact]
-        public void PerfectExpressionMatchCanMatchOnlyOneExpressionOfKind()
-        {
-var tree = CSharpSyntaxTree.ParseText(
+        private readonly SyntaxTree tree = CSharpSyntaxTree.ParseText(
 @"using System;
 using System.Collections;
 using System.Linq;
@@ -36,9 +29,27 @@ namespace HelloWorld
         }
     }
 }");
-            var match = TreeMatcher.Match(tree.GetRoot(), new Snippet("Console.WriteLine(\"Hello, World\")"));
+
+
+        public TreeMatcherTests(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
+        [Fact]
+        public void PerfectExpressionMatchCanMatchOnlyOneExpressionOfKind()
+        {
+            var match = TreeMatcher.Match(tree.GetRoot(), new Snippet("Console.WriteLine(\"Hello, World!\")"));
 
             match.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void StringLiteralDifferenceIsDetected()
+        {
+            var match = TreeMatcher.Match(tree.GetRoot(), new Snippet("Console.WriteLine(\"Something else\")"));
+
+            match.Should().BeNull();
         }
 
         [Fact]
