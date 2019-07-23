@@ -10,6 +10,9 @@ namespace Bumblebee
 {
     public static class TreeMatcher
     {
+        private static readonly Regex SingleLowercaseCharacter = new Regex(@"^\p{Ll}$", RegexOptions.Compiled);
+        
+
         public static SyntaxNode? Match(SyntaxNode tree, Snippet snippet)
         {
             return Match(tree, snippet.Expression);
@@ -75,12 +78,17 @@ namespace Bumblebee
 
         private static bool RootedRecursiveMatchWithWildcards(SyntaxNode haystack, SyntaxNode needle)
         {
-            // TODO: "with wildcards"! when the needle is an identifier it might be a wildcard match
-
             if (!haystack.IsKind(needle.Kind()))
             {
-                return false;
+                if (IsWildcardExpression(needle) &&
+                    haystack is ExpressionSyntax)
+                {
+                    // The current root of the needle is a wildcard, and the current
+                    // root of the haystack is some kind of expression.  That's a match!
+                    return true;
+                }
 
+                return false;
             }
 
             var haystackChildren = haystack.ChildNodes().ToArray();
@@ -114,5 +122,9 @@ namespace Bumblebee
 
             return true;
         }
+
+        private static bool IsWildcardExpression(SyntaxNode n) =>
+            n.IsKind(SyntaxKind.IdentifierName) &&
+            SingleLowercaseCharacter.IsMatch(((IdentifierNameSyntax)n).Identifier.ValueText);
     }
 }

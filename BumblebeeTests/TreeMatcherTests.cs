@@ -52,6 +52,22 @@ namespace HelloWorld
             match.Should().BeNull();
         }
 
+        [Fact]
+        public void DifferentLiteralTypeDifferenceIsDetected()
+        {
+            var match = TreeMatcher.Match(tree.GetRoot(), new Snippet("Console.WriteLine(12)"));
+
+            match.Should().BeNull();
+        }
+
+        [Fact]
+        public void WildcardMatchesStringLiteral()
+        {
+            var match = TreeMatcher.Match(tree.GetRoot(), new Snippet("Console.WriteLine(a)"));
+
+            match.Should().NotBeNull();
+        }
+
         [Theory]
         [InlineData("Foo.Baz()")]
         [InlineData("Baz.Bar()")]
