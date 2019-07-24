@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -42,6 +43,11 @@ namespace Bumblebee
             SubexpressionIdentifiers = replacementNodes
                 .Select(g => g.Key)
                 .ToList();
+
+            if (replacementNodes.Any(g => g.Count() > 1))
+            {
+                throw  new NotImplementedException("Matching the same subexpression is not yet supported: https://github.com/rainersigwald/bumblebee/issues/4");
+            }
         }
 
         /// <summary>

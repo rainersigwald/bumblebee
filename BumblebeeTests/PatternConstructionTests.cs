@@ -16,7 +16,7 @@ namespace BumblebeeTests
         [InlineData("Qualified.Method(a)")]
         [InlineData("MethodWithALowercaseA(a)")]
         [InlineData(@"a = ""a""")]
-        [InlineData(@"a + a + a")]
+        // [InlineData(@"a + a + a")] // todo: https://github.com/rainersigwald/bumblebee/issues/4
         [InlineData(@"[a]")]
         [InlineData(@"Something[a]")]
         public void SinglePatternMatch(string snippet)
