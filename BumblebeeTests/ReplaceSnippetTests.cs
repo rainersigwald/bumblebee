@@ -15,7 +15,9 @@ namespace BumblebeeTests
                 .ReplaceSnippet(new Snippet(@"Console.WriteLine(""Hello, World!"")"),
                     new Snippet("variableReference"))
                 .ToFullString()
-                .Should().NotContainAny("Console.WriteLine", "Hello, World!");
+                .Should().NotContainAny("Console.WriteLine", "Hello, World!")
+                .And.Contain("variableReference")
+                .And.NotMatchRegex("\nvariableReference", because: "The leading trivia should be preserved");
         }
 
         private readonly SyntaxTree tree = CSharpSyntaxTree.ParseText(

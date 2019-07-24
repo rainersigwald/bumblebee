@@ -19,8 +19,25 @@ namespace Bumblebee
         /// </summary>
         public static SyntaxNode ReplaceSnippet(this SyntaxNode original, Snippet from, Snippet to)
         {
-            return original.ReplaceNodes(TreeMatcher.Matches(original, from),
-                (m, n) => SyntaxFactory.ParseName("replacement"));
+            return original.ReplaceNodes(TreeMatcher.Matches(original, from), GenerateReplacementNode(from, to));
+        }
+
+        private static Func<SyntaxNode, SyntaxNode, SyntaxNode> GenerateReplacementNode(Snippet from, Snippet to)
+        {
+            if (from.SubexpressionIdentifiers.Any())
+            {
+                throw new NotImplementedException("sorry, only smart enough to do constants in the 'from' snippet right now");
+            }
+
+            if (to.SubexpressionIdentifiers.Any())
+            {
+                throw new NotImplementedException("sorry, only smart enough to do constants in the 'to' snippet right now");
+            }
+
+            return (original, withModifiedChildren) =>
+            {
+                return to.Expression.WithLeadingTrivia(original.GetLeadingTrivia()).WithTrailingTrivia(original.GetTrailingTrivia());
+            };
         }
     }
 }
