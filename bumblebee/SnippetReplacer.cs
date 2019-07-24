@@ -24,11 +24,6 @@ namespace Bumblebee
 
         private static Func<SyntaxNode, SyntaxNode, SyntaxNode> GenerateReplacementNode(Snippet from, Snippet to)
         {
-            if (from.SubexpressionIdentifiers.Any())
-            {
-                throw new NotImplementedException("sorry, only smart enough to do constants in the 'from' snippet right now");
-            }
-
             if (to.SubexpressionIdentifiers.Any())
             {
                 throw new NotImplementedException("sorry, only smart enough to do constants in the 'to' snippet right now");

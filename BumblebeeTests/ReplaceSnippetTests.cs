@@ -8,11 +8,15 @@ namespace BumblebeeTests
 {
     public class ReplaceSnippetTests
     {
-        [Fact]
-        public void ReplaceExpressionWithConstant()
+        [Theory]
+        [InlineData(@"Console.WriteLine(""Hello, World!"")")]
+        [InlineData(@"Console.WriteLine(a)")]
+        [InlineData(@"Console.a(b)")]
+        [InlineData(@"a(""Hello, World!"")")]
+        public void ReplaceExpressionWithConstant(string fromText)
         {
             tree.GetRoot()
-                .ReplaceSnippet(new Snippet(@"Console.WriteLine(""Hello, World!"")"),
+                .ReplaceSnippet(new Snippet(fromText),
                     new Snippet("variableReference"))
                 .ToFullString()
                 .Should().NotContainAny("Console.WriteLine", "Hello, World!")
