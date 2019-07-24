@@ -32,9 +32,7 @@ namespace bumblebee
 
                 foreach (var syntaxTree in compilation.SyntaxTrees)
                 {
-                    var match = TreeMatcher.Match(syntaxTree.GetRoot(), fromSnippet);
-
-                    if (match is object)
+                    foreach (var match in TreeMatcher.Matches(syntaxTree.GetRoot(), fromSnippet))
                     {
                         Console.WriteLine(match);
                     }

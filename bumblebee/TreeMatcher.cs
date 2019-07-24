@@ -24,7 +24,7 @@ namespace Bumblebee
         /// <returns></returns>
         public static SyntaxNode? Match(SyntaxNode haystack, Snippet needle)
         {
-            return Match(haystack, needle.Expression);
+            return Matches(haystack, needle.Expression).FirstOrDefault();
         }
 
         /// <summary>
@@ -33,7 +33,18 @@ namespace Bumblebee
         /// <param name="haystack">A <see cref="SyntaxNode"/> representing the code to be searched in.</param>
         /// <param name="needle">A match pattern.</param>
         /// <returns></returns>
-        public static SyntaxNode? Match(SyntaxNode haystack, SyntaxNode needle)
+        public static IEnumerable<SyntaxNode> Matches(SyntaxNode haystack, Snippet needle)
+        {
+            return Matches(haystack, needle.Expression);
+        }
+
+        /// <summary>
+        /// Find the matches of a given snippet in a tree.
+        /// </summary>
+        /// <param name="haystack">A <see cref="SyntaxNode"/> representing the code to be searched in.</param>
+        /// <param name="needle">A match pattern.</param>
+        /// <returns></returns>
+        public static IEnumerable<SyntaxNode> Matches(SyntaxNode haystack, SyntaxNode needle)
         {
             SyntaxKind needleRootKind = needle.Kind();
             // Console.WriteLine($"Trying to match a {needleRootKind}");
@@ -83,12 +94,10 @@ namespace Bumblebee
 
                 //System.Console.WriteLine($"Calling it a match on {descendant} to {needle}");
 
-                return descendant;
+                yield return descendant;
 
                 // System.Console.WriteLine($"Discarding {descendant}");
             }
-
-            return null;
         }
 
         private static bool RootedRecursiveMatchWithWildcards(SyntaxNode haystack, SyntaxNode needle)
