@@ -28,12 +28,24 @@ namespace Bumblebee
 
             // TODO: make this error! just not sure . . . how.
 
-            if (!Expression.DescendantNodes().Any())
-            {
-                throw new UnknownExpressionException();
-            }
-
             var lc = new Regex(@"^\p{Ll}$");
+
+            if (Expression is IdentifierNameSyntax identifier)
+            {
+                // It should be possible to express a pattern that's a single variable expansion,
+                // as long as it's not a wildcard.
+                if (lc.IsMatch(identifier.Identifier.ValueText))
+                {
+                    throw new UnknownExpressionException("Snippets consisting of only a single lowercase character are not supported");
+                }
+            }
+            else
+            {
+                if (!Expression.DescendantNodes().Any())
+                {
+                    throw new UnknownExpressionException($"Got a non-identifier but no descendants?: {Expression} is a {Expression.Kind()}");
+                }
+            }
 
             var replacementNodes = Expression.DescendantNodes()
                 .OfType<IdentifierNameSyntax>()

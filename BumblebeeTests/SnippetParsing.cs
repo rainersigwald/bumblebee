@@ -10,10 +10,16 @@ namespace BumblebeeTests
     public class SnippetParsing
     {
         [Fact]
-        public static void BareIdentifierNameThrows()
+        public static void BareWildcardIdentifierNameThrows()
         {
             Assert.Throws<UnknownExpressionException>(() =>
                     new Snippet("a"));
+        }
+
+        [Fact]
+        public static void BareNonWildcardIdentifierNameDoesNotThrow()
+        {
+            new Snippet("aVariableName").Should().NotBeNull();
         }
 
         [Fact]

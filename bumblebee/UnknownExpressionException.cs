@@ -9,5 +9,11 @@ namespace Bumblebee
     [Serializable]
     public class UnknownExpressionException : ArgumentException
     {
+        /// <summary>
+        /// Create a new error with a friendly message.
+        /// </summary>
+        public UnknownExpressionException(string message)
+            : base(message)
+        {}
     }
 }
