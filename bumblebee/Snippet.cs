@@ -45,7 +45,7 @@ namespace Bumblebee
         }
 
         /// <summary>
-        /// List of indentifiers found in the expression that will be treated as wildcards.
+        /// List of identifiers found in the expression that will be treated as wildcards.
         /// </summary>
         public List<string> SubexpressionIdentifiers { get; private set; }
     }
