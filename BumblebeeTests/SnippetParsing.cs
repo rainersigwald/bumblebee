@@ -19,7 +19,7 @@ namespace BumblebeeTests
         [Fact]
         public static void IdentifierDotMethod()
         {
-            var s = new Snippet("a.M()");
+            var s = new Snippet("");
 
             s.Expression.Kind().Should().Be(SyntaxKind.InvocationExpression);
 
