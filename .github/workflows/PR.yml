@@ -22,7 +22,7 @@ jobs:
       if: always()
       with:
         name: Build logs
-        path: '**/*.binlog'
+        path: 'msbuild.binlog'
 
     - name: Test
       run: dotnet test --no-build
