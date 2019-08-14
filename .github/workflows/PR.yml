@@ -21,7 +21,7 @@ jobs:
     - uses: actions/upload-artifact@master
       with:
         name: Build logs
-        path: **/*.binlog
+        path: '**/*.binlog'
 
     - name: Test
       run: dotnet test --no-build
