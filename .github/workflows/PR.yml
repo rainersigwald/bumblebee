@@ -15,5 +15,13 @@ jobs:
       with:
         dotnet-version: '3.0.100-preview8-013656'
 
-    - name: Build and test
-      run: dotnet test
+    - name: Build
+      run: dotnet build -bl
+
+    - uses: actions/upload-artifact@master
+      with:
+        name: Build logs
+        path: **/*.binlog
+
+    - name: Test
+      run: dotnet test --no-build
