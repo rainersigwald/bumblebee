@@ -16,7 +16,7 @@ jobs:
         dotnet-version: '3.0.100-preview8-013656'
 
     - name: Build
-      run: dotnet build -bl
+      run: dotnet build -bl -p:GenerateFullPaths=true
 
     - uses: actions/upload-artifact@master
       if: always()
