@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using Xunit;
-}}
+
 namespace BumblebeeTests
 {
     public class SnippetParsing
@@ -19,7 +19,7 @@ namespace BumblebeeTests
         [Fact]
         public static void IdentifierDotMethod()
         {
-            var s = new Snippet("");
+            var s = new Snippet("a.M()");
 
             s.Expression.Kind().Should().Be(SyntaxKind.InvocationExpression);
 
