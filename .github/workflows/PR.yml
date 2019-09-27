@@ -10,6 +10,9 @@ jobs:
     steps:
     - uses: actions/checkout@master
     
+    - name: uname
+      run: uname -a
+    
     - name: Install .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
