@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     
     steps:
     - uses: actions/checkout@master
@@ -13,7 +13,7 @@ jobs:
     - name: Install .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '3.0.100-preview8-013656'
+        dotnet-version: '3.0.100'
 
     - name: Build
       run: dotnet build -bl -p:GenerateFullPaths=true
