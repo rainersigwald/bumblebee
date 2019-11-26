@@ -30,6 +30,12 @@ namespace bumblebee
             {
                 var compilation = await project.GetCompilationAsync();
 
+                if (compilation is null)
+                {
+                    Console.Error.WriteLine($"Couldn't get a compilation from {project}");
+                    continue;
+                }
+
                 foreach (var syntaxTree in compilation.SyntaxTrees)
                 {
                     foreach (var match in TreeMatcher.Matches(syntaxTree.GetRoot(), fromSnippet))
