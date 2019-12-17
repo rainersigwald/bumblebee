@@ -14,7 +14,7 @@ jobs:
       run: uname -a
     
     - name: Install .NET Core SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@master
       with:
         dotnet-version: '3.0.100'
 
