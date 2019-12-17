@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using Xunit;
-
+}}
 namespace BumblebeeTests
 {
     public class SnippetParsing

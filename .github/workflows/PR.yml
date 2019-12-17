@@ -1,0 +1,31 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-18.04
+    
+    steps:
+    - uses: actions/checkout@master
+    
+    - name: uname
+      run: uname -a
+    
+    - name: Install .NET Core SDK
+      uses: actions/setup-dotnet@master
+      with:
+        dotnet-version: '3.0.100'
+
+    - name: Build
+      run: dotnet build -bl
+      
+    - uses: actions/upload-artifact@master
+      if: always()
+      with:
+        name: Build logs
+        path: 'msbuild.binlog'
+
+    - name: Test
+      run: dotnet test --no-build
